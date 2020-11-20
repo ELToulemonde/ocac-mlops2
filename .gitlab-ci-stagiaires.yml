@@ -4,5 +4,5 @@ test:
   stage: test
   script:
     - pip install .
-    # install test requirements
-    # trigger tests
+    - install test requirements
+    - trigger tests
