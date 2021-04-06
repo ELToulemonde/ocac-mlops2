@@ -1,20 +1,36 @@
-image: "python:3.8"
-
 stages:
   - test
   - qualite
+  - build
 
 test:
+  image: python:3.8
   stage: test
   script:
-  - pip install -r requirements.txt
-  - pip install -r requirements_test.txt
-  - python -m pytest tests/test_unit
-  - behave tests/test_functional/features
+    - pip install -r requirements.txt
+    - pip install -r requirements_test.txt
+    - python -m pytest tests/test_unit
+    - behave tests/test_functional/features
 
 qualite:
+  image: python:3.8
   stage: qualite
   script:
     - pip install -r requirements.txt && pip install -r requirements_test.txt
     - make tests-unitaires  ## pour calculer le code coverage
     - ./tests/tests_pyramid.sh  ## pour mesurer la pyramide de tests
+
+build-and-push-exposing-predictions-app-to-gitlab-registry:
+  image:
+    name: gcr.io/kaniko-project/executor:v1.5.0-debug
+    entrypoint: [ "" ]
+  stage: build
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context $CI_PROJECT_DIR/exposition
+      --dockerfile $CI_PROJECT_DIR/exposition/embedded_model/Dockerfile
+      --destination $CI_REGISTRY_IMAGE/exposing-predictions-app:latest
+      --destination $CI_REGISTRY_IMAGE/exposing-predictions-app:$CI_COMMIT_SHA
+
