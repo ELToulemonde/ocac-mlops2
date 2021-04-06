@@ -29,7 +29,7 @@ build-and-push-exposing-predictions-app-to-gitlab-registry:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor
-      --context $CI_PROJECT_DIR/exposition
+      --context $CI_PROJECT_DIR/exposition/embedded_model
       --dockerfile $CI_PROJECT_DIR/exposition/embedded_model/Dockerfile
       --destination $CI_REGISTRY_IMAGE/exposing-predictions-app:latest
       --destination $CI_REGISTRY_IMAGE/exposing-predictions-app:$CI_COMMIT_SHA
