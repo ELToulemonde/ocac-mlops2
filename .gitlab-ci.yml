@@ -6,3 +6,4 @@ stages:
   - test
   - qualite
   - generer-les-instructions-de-tp
+  - build-docker-images

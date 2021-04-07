@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  exposing-predictions:
+    image: registry.gitlab.com/octo-technology/les-bg-de-la-data/s-s-all/formation/dsin2/exposing-predictions-app:latest
+    build: ./exposing_predictions/
+    ports:
+      - 15000:8090
+
+  embedded-model:
+    image: registry.gitlab.com/octo-technology/les-bg-de-la-data/s-s-all/formation/dsin2/embedded-model-app:latest
+    build: ./embedded_model/
+    ports:
+      - 15001:8091
+
+  inference-service:
+    image: registry.gitlab.com/octo-technology/les-bg-de-la-data/s-s-all/formation/dsin2/inference-service:latest
+    build:
+      context: ./model_as_a_service
+      dockerfile: Dockerfile-inference-service
+    ports:
+      - 15002:5000
+
+  app:
+    image: registry.gitlab.com/octo-technology/les-bg-de-la-data/s-s-all/formation/dsin2/app:latest
+    build:
+      context: ./model_as_a_service
+      dockerfile: Dockerfile-app
+    environment:
+      - INFERENCE_HOST=inference-service
+    ports:
+      - 15003:8092

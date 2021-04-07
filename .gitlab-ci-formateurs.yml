@@ -10,3 +10,67 @@ pages:
   artifacts:
     paths:
       - public
+
+build-and-push-embedded-model-app-to-gitlab-registry:
+  image:
+    name: gcr.io/kaniko-project/executor:v1.5.0-debug
+    entrypoint: [ "" ]
+  stage: build-docker-images
+  variables:
+    CONTEXT_DIR: $CI_PROJECT_DIR/exposition/embedded_model
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context $CONTEXT_DIR
+      --dockerfile $CONTEXT_DIR/Dockerfile
+      --destination $CI_REGISTRY_IMAGE/embedded-model-app:latest
+      --destination $CI_REGISTRY_IMAGE/embedded-model-app:$CI_COMMIT_SHA
+
+build-and-push-exposing-predictions-app-to-gitlab-registry:
+  image:
+    name: gcr.io/kaniko-project/executor:v1.5.0-debug
+    entrypoint: [ "" ]
+  stage: build-docker-images
+  variables:
+    CONTEXT_DIR: $CI_PROJECT_DIR/exposition/exposing_predictions
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context $CONTEXT_DIR
+      --dockerfile $CONTEXT_DIR/Dockerfile
+      --destination $CI_REGISTRY_IMAGE/exposing-predictions-app:latest
+      --destination $CI_REGISTRY_IMAGE/exposing-predictions-app:$CI_COMMIT_SHA
+
+build-and-push-inference-service-to-gitlab-registry:
+  image:
+    name: gcr.io/kaniko-project/executor:v1.5.0-debug
+    entrypoint: [ "" ]
+  stage: build-docker-images
+  variables:
+    CONTEXT_DIR: $CI_PROJECT_DIR/exposition/model_as_a_service
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context $CONTEXT_DIR
+      --dockerfile $CONTEXT_DIR/Dockerfile-inference-service
+      --destination $CI_REGISTRY_IMAGE/inference-service:latest
+      --destination $CI_REGISTRY_IMAGE/inference-service:$CI_COMMIT_SHA
+
+build-and-push-app-to-gitlab-registry:
+  image:
+    name: gcr.io/kaniko-project/executor:v1.5.0-debug
+    entrypoint: [ "" ]
+  stage: build-docker-images
+  variables:
+    CONTEXT_DIR: $CI_PROJECT_DIR/exposition/model_as_a_service
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context $CONTEXT_DIR
+      --dockerfile $CONTEXT_DIR/Dockerfile-app
+      --destination $CI_REGISTRY_IMAGE/app:latest
+      --destination $CI_REGISTRY_IMAGE/app:$CI_COMMIT_SHA
