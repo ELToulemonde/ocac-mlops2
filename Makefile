@@ -38,3 +38,28 @@ tests-unitaires:
 .PHONY: tests-fonctionnels  ## ✅ lance les tests fonctionnels
 tests-fonctionnels:
 	python -m behave tests/test_functional/features
+
+.PHONY: distribution  ## 📦 crée le package au format wheel
+distribution:
+	python3 setup.py sdist bdist_wheel
+
+.PHONY: dataset  ## 🔽 télécharge les données et les dézippe dans le dossier data/
+dataset:
+	curl -L https://opendata-renewables.engie.com/media/datasets/01c55756-5cd6-4f60-9f63-2d771bb25a1a.zip \
+	 -o data/la-haute-borne-data-2017-2020.zip
+	unzip data/la-haute-borne-data-2017-2020.zip -d data/
+	rm data/la-haute-borne-data-2017-2020.zip
+
+.PHONY: airflow-setup  ## 💨  Initialize airflow backend: initdb > variables > connections
+airflow-setup:
+	echo "AIRFLOW_HOME is: ${AIRFLOW_HOME}"
+	airflow initdb
+
+.PHONY: airflow-webserver  ## 🌐  Run airflow web server
+airflow-webserver:
+	echo "AIRFLOW_HOME is: ${AIRFLOW_HOME}"
+	airflow webserver --port 8080
+
+airflow-scheduler:
+	echo "AIRFLOW_HOME is: ${AIRFLOW_HOME}"
+	airflow scheduler
