@@ -4,4 +4,5 @@ include:
 
 stages:
   - test
+  - qualite
   - generer-les-instructions-de-tp

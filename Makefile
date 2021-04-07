@@ -29,8 +29,12 @@ dependences-de-test:
 
 .PHONY: tests  ## ✅ lance tous les tests
 tests:
-	$(MAKE) tests-unitaires
+	$(MAKE) tests-unitaires && $(MAKE) tests-fonctionnels
 
 .PHONY: tests-unitaires  ## ✅ lance les tests unitaires
 tests-unitaires:
 	python -m pytest --cov=formation_indus_ds_avancee/ tests/test_unit/ -vv -p no:warnings
+
+.PHONY: tests-fonctionnels  ## ✅ lance les tests fonctionnels
+tests-fonctionnels:
+	python -m behave tests/test_functional/features

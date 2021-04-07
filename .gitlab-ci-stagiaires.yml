@@ -5,3 +5,10 @@ test:
   script:
     - pip install ".[test]"
     - python -m pytest tests/test_unit
+    - Add behave command
+
+qualite:
+  stage: qualite
+  script:
+    - pip install ".[test]"
+    - Add quality command
