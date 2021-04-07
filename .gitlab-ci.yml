@@ -4,5 +4,6 @@ include:
 
 stages:
   - generer-les-instructions-de-tp
+  - build-docker-images
   - test
   - qualite
