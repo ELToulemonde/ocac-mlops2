@@ -28,7 +28,6 @@ __pycache__/
 # Modèles sauvegardées dans la registry locale
 models/*
 !.gitkeep
-!models/model.joblib
 prepared_features
 
 # Ignore predictions
@@ -43,3 +42,6 @@ dags/unittests.cfg
 # Packaging artefacts
 build/
 dist/
+
+# TP
+TP_instructions/tp*/

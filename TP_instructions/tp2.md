@@ -30,7 +30,9 @@ Sur cette branche, il y a maintenant :
 
 Dans cette partie, nous allons rédiger un test fonctionnel avec l'outil `Behave`.
 
-Pour cela, il y a un squelette de test fonctionnel à compléter dans `dsin2/tests/test_functional/features/steps/training_workflow.py`.
+Pour cela, il y a un squelette de test fonctionnel à compléter dans `dsin2/tests/test_functional/features/training_workflow.feature`.
+
+Le test correspondant se trouve dans `dsin2/tests/test_functional/features/steps/training_workflow.py`.
 
 ## Tests fonctionnels avec Behave dans la CI
 
@@ -46,6 +48,6 @@ Compléter la chaîne d'intégration continue avec une step `qualite` afin de
 - mesurer la couverture de tests avec `pytest` en rajoutant l'argument `--cov`,
   - `python -m pytest --cov=formation_indus_ds_avancee/ tests/test_unit/ -vv -p no:warnings`
 - mesurer la pyramide de tests en exécutant le script
-  - `./tests/tests_pyramide.sh`
+  - `./dsin2/tests/tests_pyramide.sh`
 
 ![test+qualite](./docs/tp2/pipeline-test-qualite-vert.png)
