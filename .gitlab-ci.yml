@@ -1,0 +1,7 @@
+include:
+  - local: .gitlab-ci-formateurs.yml
+  - local: .gitlab-ci-stagiaires.yml
+
+stages:
+  - test
+  - generer-les-instructions-de-tp

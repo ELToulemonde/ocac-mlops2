@@ -21,8 +21,16 @@ conda-env:
 
 .PHONY: dependences  ## ⏬ installe les dépendances de production
 dependences:
-	pip install -r requirements.txt
+	pip install .
 
 .PHONY: dependences-de-test  ## 🧪 installe toutes les dépendances, y compris celles de test
 dependences-de-test:
-	$(MAKE) dependences & $(PIP_BINARY) install -e ".[test]"
+	$(MAKE) dependences & $(PIP_BINARY) install ".[test]"
+
+.PHONY: tests  ## ✅ lance tous les tests
+tests:
+	$(MAKE) tests-unitaires
+
+.PHONY: tests-unitaires  ## ✅ lance les tests unitaires
+tests-unitaires:
+	python -m pytest --cov=formation_indus_ds_avancee/ tests/test_unit/ -vv -p no:warnings
