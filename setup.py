@@ -17,5 +17,7 @@ setup(
     author_email='',
     description='Package pour le TP de la formation industrialisation de la data science avancée',
     install_requires=requirements,
-    tests_require=test_requirements
+    extras_require={
+        'test': test_requirements
+    }
 )
