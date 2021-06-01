@@ -5,10 +5,11 @@ test:
   script:
     - pip install ".[test]"
     - python -m pytest tests/test_unit
-    - Add behave command
+    - behave tests/test_functional/features
 
 qualite:
   stage: qualite
   script:
     - pip install ".[test]"
-    - Add quality command
+    - make tests-unitaires  ## pour calculer le code coverage
+    - ./tests/tests_pyramid.sh  ## pour mesurer la pyramide de tests
