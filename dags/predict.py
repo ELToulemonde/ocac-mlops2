@@ -26,10 +26,12 @@ prepare_features = PythonOperator(task_id='prepare_features',
                                              'features_path': FEATURES_PATH,
                                              'training_mode': False})
 
-# Start completing predict task
-# predict = PythonOperator()
-# End completing predict task
+predict = PythonOperator(task_id='predict',
+                         python_callable=predict_with_io,
+                         dag=dag,
+                         provide_context=False,
+                         op_kwargs={'features_path': FEATURES_PATH,
+                                    'model_path': MODEL_PATH,
+                                    'predictions_folder': PREDICTIONS_FOLDER})
 
-
-# Add predict after prepare features
-prepare_features
+prepare_features >> predict
