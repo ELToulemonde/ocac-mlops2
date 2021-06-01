@@ -20,7 +20,4 @@ def monitor_with_io(predictions_folder: str, db_con_str: str, monitoring_table_n
 
 
 def monitor(latest_predictions: pd.DataFrame) -> pd.DataFrame:
-    # Start filling function
-
-    # End filling function
-    return monitoring_df
+    return pd.DataFrame({"predictions_mean": [latest_predictions.predictions.mean()]})

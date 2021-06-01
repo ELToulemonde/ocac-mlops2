@@ -2,7 +2,7 @@ import os
 from unittest.mock import patch
 
 import pandas as pd
-from pytest import mark, fixture
+from pytest import fixture
 from sqlalchemy import create_engine
 
 from dags.config import MONITORING_TABLE_NAME
@@ -18,7 +18,6 @@ def get_sqlite_db_conn():
     os.remove('test_db.db')
 
 
-@mark.skip("Complete monitor function and test, then remove the mark.skip")
 @patch('pandas.read_csv')
 def test_monitor_with_io_should_write_predictions_mean_to_db(mocked_read_csv, get_sqlite_db_conn):
     # Given
@@ -28,9 +27,7 @@ def test_monitor_with_io_should_write_predictions_mean_to_db(mocked_read_csv, ge
                                 'predictions': [12, 14]})
     mocked_read_csv.return_value = predictions
     db_con_str = 'sqlite:///test_db.db'
-    # Start filling expected
-    expected = ...
-    # End filling expected
+    expected = pd.DataFrame({'predictions_mean': [13.]})
 
     # When
     monitor_with_io(predictions_folder, db_con_str, monitoring_table_name=MONITORING_TABLE_NAME)
@@ -41,5 +38,4 @@ def test_monitor_with_io_should_write_predictions_mean_to_db(mocked_read_csv, ge
 
 
 def test_monitoring_table_name_as_been_changed():
-    # Please change monitoring table name so that you don't overwrite monitoring from other attendees
     assert MONITORING_TABLE_NAME != "monitoring"
