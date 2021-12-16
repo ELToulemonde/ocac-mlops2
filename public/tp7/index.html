@@ -1,0 +1,167 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>TP7 - Exposition de modèles</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="tp7"
+                  title="TP7 - Exposition de modèles"
+                  environment="web"
+                  feedback-link="https://gitlab.com/octo-technology/les-bg-de-la-data/s-s-all/formation/dsin2/-/issues/new">
+    
+      <google-codelab-step label="Overview" duration="30">
+        <h2 is-upgraded>A l&#39;issue de cette section, vous aurez découvert</h2>
+<ul>
+<li>Comment fonctionne une simple API Flask,</li>
+<li>Le pattern d&#39;exposition <code>embedded model</code>,</li>
+<li>Le pattern d&#39;exposition <code>model as a service</code>,</li>
+<li>Le pattern d&#39;exposition <code>model published as data</code>,</li>
+</ul>
+<h2 is-upgraded>Présentation des nouveautés sur la branche de ce TP</h2>
+<p>Pour ce TP, utiliser la branch 7_starting_exposition</p>
+<p><code>git checkout 7_starting_exposition</code></p>
+<p>Sur cette branche, il y a maintenant :</p>
+<ul>
+<li>Un dossier exposition qui contient trois format d&#39;expositions</li>
+<li><code>embedded_model</code> une app streamlit qui permet de demander des prédictions</li>
+<li><code>exposing_predictions</code> une app streamlit qui permet de voir les prédictions réalisées précédement</li>
+<li><code>model_as_a_service</code> une api flask qui permet de demander des prédictions</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Développement d&#39;API avec Flask" duration="0">
+        <p>Flask est un microserveur d&#39;application. Il est souvent utilisé en Python pour développer des APIs et exposer des ressources.</p>
+<h2 is-upgraded>Lancer l&#39;API et requêter la route health</h2>
+<ul>
+<li>Se rendre dans <code>dsin2-public-ocac/exposition/model_as_a_service/</code></li>
+<li>Démarrer le serveur Flask d&#39;exposition avec <code>FLASK_APP=inference.py python -m flask run</code></li>
+</ul>
+<p>⚠ Le serveur Flask ne sera pas consultable dans votre navigateur !</p>
+<p>Le serveur d&#39;exposition est désormais disponible sur le port 5000 <a href="http://localhost:5000" target="_blank">http://localhost:5000</a>, avec:</p>
+<ul>
+<li>la route de healthcheck <code>/health</code> pour vérifier que le service est fonctionnel,</li>
+<li>la route predict <code>/predict</code> pour obtenir des prédictions</li>
+</ul>
+<p>Dans votre terminal, avec l&#39;outil en ligne de commande <code>cURL</code>, requêtez l&#39;url de <code>healthcheck</code> du service pour s&#39;assurer qu&#39;il fonctionne (<a href="http://localhost:5000/health" target="_blank">http://localhost:5000/health</a>).</p>
+<p class="image-container"><img alt="requete-healthcheck" src="img/47019fb2df4999bd.png"></p>
+<h2 is-upgraded>Implémenter la route predict</h2>
+<p>La route predict n&#39;est actuellement pas implémenté.</p>
+<p>Codez le contenu de cette route.</p>
+<p>Quelques informations relatives à la construction de route d&#39;api:</p>
+<ul>
+<li>Pour passer un argument dans l&#39;appel à la route ajouter <code>?arg_name=value</code> à la route (exemple : <a href="http://localhost:5000/predict?Ws1_avg=10" target="_blank">http://localhost:5000/predict?Ws1_avg=10</a>)</li>
+<li>Pour récupérer la valeur d&#39;un argument dans le code utiliser <code>request.args.get('argument_name')</code> (exemple : <code>received_wind_speed_avg = request.args.get('Ws1_avg')</code>)</li>
+<li>Pour retourner un résultat dans une API flask vous devez utiliser <code>jsonify</code> (exemple : <code>jsonify(prediction)</code>)</li>
+</ul>
+<p>Comme le modèle prend de nombreuses variables en input, pour simplifier le TP nous vous proposons de passer que 1 ou 2 arguments à la route d&#39;API et fixer les autres par défaut. Pour cela voici un code qui créé un <code>dataframe</code> avec des valeurs par défaut pour toutes les variables :</p>
+<pre><code language="language-python" class="language-python">received_data_df = pd.DataFrame(
+        {&#34;Wind_turbine_name&#34;: &#34;R80721&#34;, &#34;Date_time&#34;: &#34;2017-02-08T08:00:00+01:00&#34;, &#34;Ba_avg&#34;: 44.99, &#34;Ba_min&#34;: 44.99,
+         &#34;Ba_max&#34;: 44.99, &#34;Ba_std&#34;: 0.0, &#34;Rt_avg&#34;: 14.0, &#34;Rt_min&#34;: 14.0, &#34;Rt_max&#34;: 14.0, &#34;Rt_std&#34;: 0.0,
+         &#34;DCs_avg&#34;: 38.36, &#34;DCs_min&#34;: 17.68, &#34;DCs_max&#34;: 52.41, &#34;DCs_std&#34;: 9.39, &#34;Cm_avg&#34;: 2.39, &#34;Cm_min&#34;: 2.05,
+         &#34;Cm_max&#34;: 2.69, &#34;Cm_std&#34;: 0.09, &#34;P_avg&#34;: -1.89, &#34;P_min&#34;: -2.35, &#34;P_max&#34;: -1.4, &#34;P_std&#34;: 0.15, &#34;Q_avg&#34;: 0.0,
+         &#34;Q_min&#34;: 0.0, &#34;Q_max&#34;: 0.0, &#34;Q_std&#34;: 0.0, &#34;S_avg&#34;: 1.89, &#34;S_min&#34;: 1.4, &#34;S_max&#34;: 2.35, &#34;S_std&#34;: 0.15,
+         &#34;Cosphi_avg&#34;: 1.0, &#34;Cosphi_min&#34;: 1.0, &#34;Cosphi_max&#34;: 1.0, &#34;Cosphi_std&#34;: 0.0, &#34;Ds_avg&#34;: 38.11, &#34;Ds_min&#34;: 17.27,
+         &#34;Ds_max&#34;: 51.91, &#34;Ds_std&#34;: 9.39, &#34;Db1t_avg&#34;: 33.41, &#34;Db1t_min&#34;: 33.20, &#34;Db1t_max&#34;: 33.59, &#34;Db1t_std&#34;: 0.14,
+         &#34;Db2t_avg&#34;: 30.79, &#34;Db2t_min&#34;: 30.6, &#34;Db2t_max&#34;: 30.85, &#34;Db2t_std&#34;: 0.02, &#34;Dst_avg&#34;: 45.59, &#34;Dst_min&#34;: 45.29,
+         &#34;Dst_max&#34;: 45.79, &#34;Dst_std&#34;: 0.11, &#34;Gb1t_avg&#34;: 35.36, &#34;Gb1t_min&#34;: 35.09, &#34;Gb1t_max&#34;: 35.5, &#34;Gb1t_std&#34;: 0.15,
+         &#34;Gb2t_avg&#34;: 37.93, &#34;Gb2t_min&#34;: 37.79, &#34;Gb2t_max&#34;: 38.0, &#34;Gb2t_std&#34;: 0.07, &#34;Git_avg&#34;: 34.13, &#34;Git_min&#34;: 31.79,
+         &#34;Git_max&#34;: 35.70, &#34;Git_std&#34;: 1.04, &#34;Gost_avg&#34;: 39.58, &#34;Gost_min&#34;: 39.04, &#34;Gost_max&#34;: 40.20, &#34;Gost_std&#34;: 0.4,
+         &#34;Ya_avg&#34;: 318.12, &#34;Ya_min&#34;: 318.12, &#34;Ya_max&#34;: 318.12, &#34;Ya_std&#34;: 0.0, &#34;Yt_avg&#34;: 20.61, &#34;Yt_min&#34;: 20.5,
+         &#34;Yt_max&#34;: 20.79, &#34;Yt_std&#34;: 0.07, &#34;Ws1_avg&#34;: 4.5, &#34;Ws1_min&#34;: 0.0, &#34;Ws1_max&#34;: 1.94, &#34;Ws1_std&#34;: 0.44,
+         &#34;Ws2_avg&#34;: 0.22, &#34;Ws2_min&#34;: 0.0, &#34;Ws2_max&#34;: 1.92, &#34;Ws2_std&#34;: 0.52, &#34;Ws_avg&#34;: 0.18, &#34;Ws_min&#34;: 0.0,
+         &#34;Ws_max&#34;: 1.89, &#34;Ws_std&#34;: 0.44, &#34;Wa_avg&#34;: 358.04, &#34;Wa_min&#34;: 298.76, &#34;Wa_max&#34;: 54.56, &#34;Wa_std&#34;: 12.05,
+         &#34;Va1_avg&#34;: None, &#34;Va1_min&#34;: None, &#34;Va1_max&#34;: None, &#34;Va1_std&#34;: None, &#34;Va2_avg&#34;: None, &#34;Va2_min&#34;: None,
+         &#34;Va2_max&#34;: None, &#34;Va2_std&#34;: None, &#34;Va_avg&#34;: 39.93, &#34;Va_min&#34;: -19.35, &#34;Va_max&#34;: 96.44, &#34;Va_std&#34;: 12.05,
+         &#34;Ot_avg&#34;: 4.80, &#34;Ot_min&#34;: 4.8, &#34;Ot_max&#34;: 4.90, &#34;Ot_std&#34;: 0.009, &#34;Nf_avg&#34;: 50.0, &#34;Nf_min&#34;: 49.95,
+         &#34;Nf_max&#34;: 50.02, &#34;Nf_std&#34;: 0.00, &#34;Nu_avg&#34;: 698.40, &#34;Nu_min&#34;: 696.01, &#34;Nu_max&#34;: 708.03, &#34;Nu_std&#34;: 2.40,
+         &#34;Rs_avg&#34;: 0.33, &#34;Rs_min&#34;: 0.0, &#34;Rs_max&#34;: 0.49, &#34;Rs_std&#34;: 0.16, &#34;Rbt_avg&#34;: 19.02, &#34;Rbt_min&#34;: 19.0,
+         &#34;Rbt_max&#34;: 19.1, &#34;Rbt_std&#34;: 0.03, &#34;Rm_avg&#34;: -18.88, &#34;Rm_min&#34;: -438.32, &#34;Rm_max&#34;: 0.0, &#34;Rm_std&#34;: 79.82,
+         &#34;Pas_avg&#34;: None, &#34;Pas_min&#34;: None, &#34;Pas_max&#34;: None, &#34;Pas_std&#34;: None, &#34;Wa_c_avg&#34;: 358.04, &#34;Wa_c_min&#34;: None,
+         &#34;Wa_c_max&#34;: None, &#34;Wa_c_std&#34;: None, &#34;Na_c_avg&#34;: 358.04, &#34;Na_c_min&#34;: None, &#34;Na_c_max&#34;: None, &#34;Na_c_std&#34;: None},
+        index=[0])
+</code></pre>
+<p>Utiliser les méthodes <code>prepare_features</code> et <code>predict</code> pour réaliser une prédiction.</p>
+<p>Pour tester votre code éteignez l&#39;API et redémarrez là avec la commande <code>FLASK_APP=inference.py python -m flask run</code>  puis requêtez une prédiction sur <a href="http://localhost:5000/predict" target="_blank">http://localhost:5000/predict</a>.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Démo: Exposition | model as a service" duration="0">
+        <p>Dans le dossier <code>exposition/</code> se trouvent un fichier <code>docker-compose.yaml</code>, exécutable avec <code>docker-compose up</code>.</p>
+<p>NB : Il n&#39;est pas possible d&#39;exécuter cette commande dans l&#39;environment de TP. Si vous avez docker et docker-compose vous pouvez le faire sur votre machine personnel. Sinon, le formateur à déjà fait cela à dans l&#39;EC2 de TP.</p>
+<p>Une fois lancée, l&#39;application streamlit est accessible sur &lt;http://:15002&gt; et le service Flask est disponible sur &lt;http://:15003&gt;.</p>
+<p>Dans le dossier <code>exposition/model_as_a_service/</code> se trouve la définition de ces 2 services:</p>
+<ul>
+<li>une application de dashboarding construite avec Streamlit dans <code>app.py</code>,</li>
+<li>un service d&#39;inférence construit avec Flask dans <code>inference.py</code>.</li>
+</ul>
+<p>L&#39;application streamlit permet d&#39;afficher une prédiction à la demande selon la valeur de <code>Ws1_avg</code> spécifiée par l&#39;utilisateur.</p>
+<p class="image-container"><img alt="streamlit-model-as-a-service" src="img/928fca2a95c4af66.png"></p>
+<ul>
+<li>Modifier la valeur de <code>Wind Speed Average</code> à 0, 10, 20, 50, 100 et demander une prédiction</li>
+<li>Observer les logs de docker-compose, et constater que le service Flask réalise les prédictions quand Streamlit les demande.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Démo: Exposition | embedded model" duration="0">
+        <p>Dans le dossier <code>exposition/</code> se trouvent un fichier <code>docker-compose.yaml</code>, exécutable avec <code>docker-compose up</code>.</p>
+<p>NB : Il n&#39;est pas possible d&#39;exécuter cette commande dans l&#39;environment de TP. Si vous avez docker et docker-compose vous pouvez le faire sur votre machine personnel. Sinon, le formateur à déjà fait cela à dans l&#39;EC2 de TP.</p>
+<p>Une fois lancée, l&#39;application streamlit avec modèle embarqué est accessible sur &lt;http://:15001&gt;.</p>
+<p>Dans le dossier <code>exposition/embedded_model/</code> se trouve la définition de ce service de dashboarding:</p>
+<ul>
+<li>une application de dashboarding construite avec Streamlit dans <code>embedded_model.py</code>,</li>
+<li>il n&#39;y a pas de service d&#39;inférence.</li>
+</ul>
+<p>L&#39;application streamlit permet d&#39;afficher une prédiction à la demande selon la valeur de <code>Ws1_avg</code> spécifiée par l&#39;utilisateur.</p>
+<p class="image-container"><img alt="streamlit-embedded-model" src="img/9307b3eae10f0523.png"></p>
+<ul>
+<li>Modifier la valeur de <code>Wind Speed Average</code> à 0, 10, 20, 50, 100 et demander une prédiction</li>
+<li>Observer les logs de docker-compose, et constater que le service Flask ne réalise pas de prédictions quand Streamlit les demande.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Démo: Exposition | Exposing predictions" duration="0">
+        <p>Dans le dossier <code>exposition/</code> se trouvent un fichier <code>docker-compose.yaml</code>, exécutable avec <code>docker-compose up</code>.</p>
+<p>NB : Il n&#39;est pas possible d&#39;exécuter cette commande dans l&#39;environment de TP. Si vous avez docker et docker-compose vous pouvez le faire sur votre machine personnel. Sinon, le formateur à déjà fait cela à dans l&#39;EC2 de TP.</p>
+<p>Une fois lancée, l&#39;application streamlit est accessible sur &lt;http://:15000&gt;.</p>
+<p>Dans le dossier <code>exposition/exposing_predictions/</code> se trouve la définition de ce service de dashboarding dans <code>display_predictions.py</code>.</p>
+<p>L&#39;application streamlit affiche des prédictions déjà réalisées.</p>
+<p class="image-container"><img alt="streamlit-exposing-predictions" src="img/c0e3394ac830d9f1.png"></p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
