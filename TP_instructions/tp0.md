@@ -24,7 +24,7 @@ Puis, cliquez sur `Register now`:
 
 ![Page de connexion à gitlab.com](./docs/tp1/gitlab-sign-in-page.png)
 
-### Fork du repo de TP dans votre espace personnel gitlab
+### Fork du repository de TP dans votre espace personnel Gitlab
 
 Une fois votre compte créé, rendez-vous sur la page du repository de code de cette formation : <https://gitlab.com/mhouacine/dsin2>
 
@@ -34,7 +34,7 @@ Puis `forkez` le repo à l'aide du bouton en haut à droite pour récupérer une
 
 🏁 Vous possédez désormais une copie personnelle du repository de code pour les TPs ! Nous allons désormais la cloner dans votre environnement de développement.
 
-## Prise en main de jupyterhub l'environnement de tp.
+## Prise en main de Jupyterhub, l'environnement de TP
 Durée : 3 min
 
 Pour vous connecter sur l'interface de TP, l'instructeur vous aura donné votre identifiant/mot de passe :
